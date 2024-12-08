@@ -404,7 +404,7 @@ namespace AUGL {
 
   private:
     std::vector<std::string> m_menuOrder; //! the order of menus in the menu bar
-    std::map<std::string,std::vector<MenuItem*>> m_items; //!the several different items
+    std::map<std::string,std::vector<MenuItem*> > m_items; //!the several different items
     Fl_Menu_Item* m_items_ptr; //!the pointer to the FLTK menu items
   };
 

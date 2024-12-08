@@ -1,14 +1,21 @@
+/**
+ * @authors Kaleb Gebrehiwot and Sofonias Gebre
+ * @brief An bit representation of chess pieces
+ *        and other helper functions.
+ */
 #ifndef Piece_HH__
 #define Piece_HH__
 
+#include "Point.hh"
+
+#include <FL/Fl_PNG_Image.H>
+
 #include <climits>
+#include <array>
 
 namespace KS{
 
-    /**
-     * @authors Kaleb Gebrehiwot and Sofonias Gebre
-     * @brief An bit representation of chess pieces
-     */
+    
     const int NONE = 0;
     const int KING = 1;
     const int PAWN = 2;
@@ -48,6 +55,41 @@ namespace KS{
     static bool IsSlidingPiece (int piece) {
         return (piece & 0b100) != 0;
     } 
+
+    // ---------- Move Rules --------------
+
+    // Figured hard coding these values for pawns would result in less code
+    //std::array<int, 4> whitePawnMoves = {-8,-16,-7,-9};
+    //std::array<int, 4> blackPawnMoves = {8,16,7,9};
+
+    std::array<int, 8> knightMoves = {-17, -15, -10, -6, 6, 10, 15, 17};
+    std::array<int, 8> kingMoves = {-9, -8, -7, -1, 1, 7, 8, 9};
+    
+    std::array<int, 4> rookDirections = {-1, 1, -8, 8};
+    std::array<int, 4> bishopDirections = {-9, 9, -7, 7};
+    std::array<int, 8> queenDirections = {-1, 1, -8, 8, -9, 9, -7, 7};
+
+    // -------------- GUI -------------------
+
+    class PieceGUI{
+        public:
+            PieceGUI(Fl_PNG_Image *img, const AUGL::Point& initPos) : piece_IMG(img), position(initPos){
+            
+            }
+
+            void setPosition(const AUGL::Point& newPos){
+                position = newPos;
+            }
+            void setImage(Fl_PNG_Image *img){
+                piece_IMG = img;
+            }
+
+            ~PieceGUI(){};
+        private:
+            Fl_PNG_Image *piece_IMG;
+            AUGL::Point position;
+    };
+
 }
 
 #endif
