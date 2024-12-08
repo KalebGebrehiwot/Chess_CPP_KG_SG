@@ -16,9 +16,12 @@ namespace KS{
     struct Board{
         std::array<int, 64> setup;
 
-        // Copy constructor
+        // Copy constructors
         Board(const Board& other){
             setup = other.setup;
+        }
+        Board(std::array<int, 64>& other){
+            setup = other;
         }
     };
 

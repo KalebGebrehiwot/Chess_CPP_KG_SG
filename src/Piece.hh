@@ -5,11 +5,7 @@
  */
 #ifndef Piece_HH__
 #define Piece_HH__
-
-#include "Point.hh"
-
-#include <FL/Fl_PNG_Image.H>
-
+#include <map>
 #include <climits>
 #include <array>
 
@@ -56,39 +52,33 @@ namespace KS{
         return (piece & 0b100) != 0;
     } 
 
+    const std::map<int, std::string> piece_To_PNG_Name{
+        {(PAWN | WHITE), "Pawn_WHITE"},
+        {(PAWN | BLACK), "Pawn_Black"},
+        {(KNIGHT | WHITE), "Knight_WHITE"},
+        {(KNIGHT | BLACK), "Knight_Black"},
+        {(BISHOP | WHITE), "Bishop_WHITE"},
+        {(BISHOP | BLACK), "Bishop_Black"},
+        {(ROOK | WHITE), "Rook_WHITE"},
+        {(ROOK | BLACK), "Rook_Black"},
+        {(QUEEN | WHITE), "Queen_WHITE"},
+        {(QUEEN | BLACK), "Queen_Black"},
+        {(KING | WHITE), "King_WHITE"},
+        {(KING | BLACK), "King_Black"}
+    };
     // ---------- Move Rules --------------
 
     // Figured hard coding these values for pawns would result in less code
-    //std::array<int, 4> whitePawnMoves = {-8,-16,-7,-9};
-    //std::array<int, 4> blackPawnMoves = {8,16,7,9};
+    //const std::array<int, 4> whitePawnMoves = {-8,-16,-7,-9};
+    //const std::array<int, 4> blackPawnMoves = {8,16,7,9};
 
-    std::array<int, 8> knightMoves = {-17, -15, -10, -6, 6, 10, 15, 17};
-    std::array<int, 8> kingMoves = {-9, -8, -7, -1, 1, 7, 8, 9};
+    const std::array<int, 8> knightMoves = {-17, -15, -10, -6, 6, 10, 15, 17};
+    const std::array<int, 8> kingMoves = {-9, -8, -7, -1, 1, 7, 8, 9};
     
-    std::array<int, 4> rookDirections = {-1, 1, -8, 8};
-    std::array<int, 4> bishopDirections = {-9, 9, -7, 7};
-    std::array<int, 8> queenDirections = {-1, 1, -8, 8, -9, 9, -7, 7};
-
-    // -------------- GUI -------------------
-
-    class PieceGUI{
-        public:
-            PieceGUI(Fl_PNG_Image *img, const AUGL::Point& initPos) : piece_IMG(img), position(initPos){
-            
-            }
-
-            void setPosition(const AUGL::Point& newPos){
-                position = newPos;
-            }
-            void setImage(Fl_PNG_Image *img){
-                piece_IMG = img;
-            }
-
-            ~PieceGUI(){};
-        private:
-            Fl_PNG_Image *piece_IMG;
-            AUGL::Point position;
-    };
+    const std::array<int, 4> rookDirections = {-1, 1, -8, 8};
+    const std::array<int, 4> bishopDirections = {-9, 9, -7, 7};
+    const std::array<int, 8> queenDirections = {-1, 1, -8, 8, -9, 9, -7, 7};
+    
 
 }
 
