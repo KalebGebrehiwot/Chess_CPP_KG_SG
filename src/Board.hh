@@ -69,25 +69,18 @@ namespace KS{
 
         // Check if the target index is out of bounds (0-63)
         if (targetIndex < 0 || targetIndex >= 64) {
-            return false;  // Off the board
+            return false;
         }
-
-        // Get the current row and column of the current position
+        
+  
         int currentRow = index / 8;
         int currentCol = index % 8;
 
-        // Get the target row and column of the target position
+    
         int targetRow = targetIndex / 8;
         int targetCol = targetIndex % 8;
-
-        // Check if the move crosses the edges of the row (left/right boundaries)
-        if (currentRow == targetRow && (currentCol == 0 || currentCol == 7)) {
-            // If you're on the leftmost or rightmost column, don't allow horizontal moves off the board
-            if ((offset == -1 && currentCol == 0) || (offset == 1 && currentCol == 7)) {
-                return false;
-            }
-        }
-
+        // [Don't know how to approach this]
+        
         // If we get here, the move is within bounds
         return true;
     }

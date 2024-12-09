@@ -53,19 +53,26 @@ namespace KS{
             }
 
             if(PieceType(piece) == PAWN){
-                // int dir = (isColor(piece, WHITE)) ? -1 : 1;
-                // // One step forward
-                // available[index + 8 * dir] = CanMakeMove(piece, index,8 * dir, board);
+                int dir = (isColor(piece, WHITE)) ? -1 : 1;
+                // One step forward
+                if(CanMakeMove(piece, index, 8 * dir, board)){
+                    available[index + 8 * dir] = true;
+                }
+                bool hasMoved = (isColor(piece, WHITE)) ? (index < 47) : (index > 16);
+                // Two steps forward
+                if(CanMakeMove(piece, index, 16 * dir, board)){
+                    available[index + 16 * dir] = !hasMoved;
+                }
+            
+                // Left/Right capture     
+                if(CanMakeMove(piece, index, 9 * dir, board)){
+                    available[index + 9 * dir] = true;
+                }
+                // Left/Right capture
+                if(CanMakeMove(piece, index, 7 * dir, board)){
+                    available[index + 7 * dir] = true;
+                }
                 
-                // bool hasMoved = (isColor(piece, WHITE)) ? (index > 47) : (index < 16);
-                // // Two steps forward
-                // available[index + 16 * dir] = !hasMoved && CanMakeMove(piece, index,16 * dir, board);
-            
-                // checkPos = index + 9 * dir; // Left/Right capture
-                // available[checkPos] = CanMakeMove(piece, index,checkPos, board);
-            
-                // checkPos = index + 7 * dir; // Left/Right capture
-                // available[checkPos] = CanMakeMove(piece, index,checkPos, board);
 
             }else if(PieceType(piece) == KNIGHT){
                 for(int offset : knightMoves){
