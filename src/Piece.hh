@@ -51,21 +51,6 @@ namespace KS{
     static bool IsSlidingPiece (int piece) {
         return (piece & 0b100) != 0;
     } 
-
-    const std::map<int, std::string> piece_To_PNG_Name{
-        {(PAWN | WHITE), "Pawn_WHITE"},
-        {(PAWN | BLACK), "Pawn_Black"},
-        {(KNIGHT | WHITE), "Knight_WHITE"},
-        {(KNIGHT | BLACK), "Knight_Black"},
-        {(BISHOP | WHITE), "Bishop_WHITE"},
-        {(BISHOP | BLACK), "Bishop_Black"},
-        {(ROOK | WHITE), "Rook_WHITE"},
-        {(ROOK | BLACK), "Rook_Black"},
-        {(QUEEN | WHITE), "Queen_WHITE"},
-        {(QUEEN | BLACK), "Queen_Black"},
-        {(KING | WHITE), "King_WHITE"},
-        {(KING | BLACK), "King_Black"}
-    };
     // ---------- Move Rules --------------
 
     // Figured hard coding these values for pawns would result in less code

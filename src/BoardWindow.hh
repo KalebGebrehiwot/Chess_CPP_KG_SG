@@ -5,7 +5,7 @@
 #include "Moves.hh"
 #include "Piece.hh"
 #include "Graphics.hh"
-#include "GameManager.hh"
+#include "ManagerClass.hh"
 
 #include <cmath>
 #include <map>
@@ -27,7 +27,7 @@ namespace KS{
         public:
             static const int SQUARE_WIDTH = 100;
             static const int PADDING = 50;
-            BoardWindow( AUGL::Point pos, AUGL::Point dimension, const std::string& title, GameManager* gameMan)
+            BoardWindow( AUGL::Point pos, AUGL::Point dimension, const std::string& title, ManagerClass* gameMan)
                 : Fl_Window(pos.x, pos.y, dimension.x, dimension.y, title.c_str())
                 , gameManager(gameMan)
             {
@@ -53,7 +53,7 @@ namespace KS{
                 piecePNGs.insert(std::make_pair("King_BLACK", new Fl_PNG_Image("assets/King_BLACK.png")));
                 // Create PieceImage:Fl_Box to display the Piece Images
                 for(int i = 0; i < 32; i++){
-                    pieceImages[i] = new PieceImage(piecePNGs["Pawn_WHITE"], {-100, -100});
+                    pieceImages[i] = new PieceImage(piecePNGs["Pawn_BLACK"], {-100, -100});
                 }
             }
             /// @brief Handle fltk events like a click 
@@ -68,18 +68,38 @@ namespace KS{
             void UpdateBoard(const Board& board, const AvailableMoves& aMoves, const std::vector<int>& capturedPieces){
                 int imgCounter = 0;
                 for(int i = 0; i < 64; i++){
+                   
                     if(board.setup[i] != 0){
                         AUGL::Point coordinates(index_toCoordinates(i));
+                        std::string pieceString = piece_To_PNG_Name[board.setup[i]];
+                        pieceImages[imgCounter]->setImage(piecePNGs[pieceString]);
                         pieceImages[imgCounter]->display({PADDING + SQUARE_WIDTH * coordinates.x, SQUARE_WIDTH * coordinates.y});
                         imgCounter++;
                     }
                 }
             }
+            
             // need to add destructor
         private:
             std::map<std::string, Fl_PNG_Image*> piecePNGs;
             std::array<PieceImage*, 32> pieceImages;
-            GameManager* gameManager;
+            ManagerClass* gameManager;
+
+
+            std::map<int, std::string> piece_To_PNG_Name = {
+                {(PAWN | WHITE), "Pawn_WHITE"},
+                {(PAWN | BLACK), "Pawn_BLACK"},
+                {(KNIGHT | WHITE), "Knight_WHITE"},
+                {(KNIGHT | BLACK), "Knight_BLACK"},
+                {(BISHOP | WHITE), "Bishop_WHITE"},
+                {(BISHOP | BLACK), "Bishop_BLACK"},
+                {(ROOK | WHITE), "Rook_WHITE"},
+                {(ROOK | BLACK), "Rook_BLACK"},
+                {(QUEEN | WHITE), "Queen_WHITE"},
+                {(QUEEN | BLACK), "Queen_BLACK"},
+                {(KING | WHITE), "King_WHITE"},
+                {(KING | BLACK), "King_BLACK"}
+            };
 
     };  
 }
