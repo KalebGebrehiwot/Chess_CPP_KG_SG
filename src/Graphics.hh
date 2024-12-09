@@ -22,6 +22,7 @@ namespace KS{
                 piece_IMG = img;
             }
             void display(const AUGL::Point& pos){
+
                 image_Box -> position(pos.x, pos.y);
                 image_Box -> image(piece_IMG);
                 image_Box->resize(pos.x, pos.y, 100,100);
@@ -89,9 +90,18 @@ namespace KS{
                 // fl_color(palette[colorIndex]);
                 // fl_rect(x(), y(), w(), h());  
             }
+            void changeColor(int index){
+                colorIndex = index;
+            }
+            void changePosition(const AUGL::Point& newPos){
+                position(newPos.x, newPos.y);
+            }
+            void drawAgain(){
+                redraw();
+            }
         private:
             int colorIndex = 0;
-            const Fl_Color palette[3] = {FL_BLACK, FL_WHITE, FL_GRAY};
+            const Fl_Color palette[5] = {FL_BLACK, FL_WHITE, FL_GRAY, FL_RED, FL_GREEN};
     };
 }
     

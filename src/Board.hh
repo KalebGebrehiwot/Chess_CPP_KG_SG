@@ -18,6 +18,9 @@ namespace KS{
 
         //Default Constructor 
         Board(){
+            for(int i = 0;i < 64; i++){
+                setup[i] = 0;
+            }
             // White pieces
             setup[56] = ROOK | WHITE;      // A1
             setup[57] = KNIGHT | WHITE;    // B1
@@ -60,8 +63,33 @@ namespace KS{
         return coordinates;
     }
 
-    bool isOnBoard(int index){
-        return 0 < index && index > 64;
+    bool isOnBoard(int index, int offset){
+        // Calculate the target index after applying the offset
+        int targetIndex = index + offset;
+
+        // Check if the target index is out of bounds (0-63)
+        if (targetIndex < 0 || targetIndex >= 64) {
+            return false;  // Off the board
+        }
+
+        // Get the current row and column of the current position
+        int currentRow = index / 8;
+        int currentCol = index % 8;
+
+        // Get the target row and column of the target position
+        int targetRow = targetIndex / 8;
+        int targetCol = targetIndex % 8;
+
+        // Check if the move crosses the edges of the row (left/right boundaries)
+        if (currentRow == targetRow && (currentCol == 0 || currentCol == 7)) {
+            // If you're on the leftmost or rightmost column, don't allow horizontal moves off the board
+            if ((offset == -1 && currentCol == 0) || (offset == 1 && currentCol == 7)) {
+                return false;
+            }
+        }
+
+        // If we get here, the move is within bounds
+        return true;
     }
     /// @return True if the specified color king is checked
     bool isChecked(int color, const Board& board){
@@ -76,16 +104,16 @@ namespace KS{
         }
         // Check for opponent pawns
         int oppPawnDir = (color == WHITE) ? -1 : 1; 
-        if(isOnBoard(kingIndex + 7 * oppPawnDir) && board.setup[kingIndex + 7 * oppPawnDir] == (oppColor | PAWN)){
+        if(isOnBoard(kingIndex, 7 * oppPawnDir) && board.setup[kingIndex + 7 * oppPawnDir] == (oppColor | PAWN)){
             return true;
         }
-        if(isOnBoard(kingIndex + 9 * oppPawnDir) && board.setup[kingIndex + 9 * oppPawnDir] == (oppColor | PAWN)){
+        if(isOnBoard(kingIndex, 9 * oppPawnDir) && board.setup[kingIndex + 9 * oppPawnDir] == (oppColor | PAWN)){
             return true;
         }
         // Check for knights
         for(int offset : knightMoves){
             int checkPos = kingIndex + offset;
-            if(isOnBoard(checkPos) && board.setup[checkPos] == (oppColor | KNIGHT)){
+            if(isOnBoard(kingIndex, offset) && board.setup[checkPos] == (oppColor | KNIGHT)){
                 return true;
             }
         }
@@ -93,7 +121,7 @@ namespace KS{
         for(int dir : bishopDirections){
             for(int i = 1; i < 8; i++){
                int checkPos = kingIndex + dir * i;
-               if(!isOnBoard(checkPos) || !IsBishopOrQueen(board.setup[checkPos])) {break;} 
+               if(!isOnBoard(kingIndex, dir * i) || !IsBishopOrQueen(board.setup[checkPos])) {break;} 
                if(isColor(board.setup[checkPos], oppColor)){
                     return false;
                } 
@@ -103,7 +131,7 @@ namespace KS{
         for(int dir : rookDirections){
             for(int i = 1; i < 8; i++){
                int checkPos = kingIndex + dir * i;
-               if(!isOnBoard(checkPos) || !IsRookOrQueen(board.setup[checkPos])) {break;} 
+               if(!isOnBoard(kingIndex, dir * i) || !IsRookOrQueen(board.setup[checkPos])) {break;} 
                if(isColor(board.setup[checkPos], oppColor)){
                     return true;
                } 
@@ -112,7 +140,7 @@ namespace KS{
         // Check for opponent King
         for(int offset : kingMoves){   
             int checkPos = kingIndex + offset;
-            if(isOnBoard(checkPos) && board.setup[checkPos] == (oppColor | KING)){
+            if(isOnBoard(kingIndex, offset) && board.setup[checkPos] == (oppColor | KING)){
                 return true;
             } 
         }
