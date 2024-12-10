@@ -51,7 +51,7 @@ namespace KS{
     }
 
     static bool IsSlidingPiece (int piece) {
-        return (piece & 0b100) != 0;
+        return PieceType(piece) == BISHOP || PieceType(piece) == ROOK || PieceType(piece) == QUEEN;
     } 
     // ---------- Move Rules --------------
 

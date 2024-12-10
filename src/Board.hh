@@ -44,9 +44,7 @@ namespace KS{
             for (int i = 8; i < 16; ++i) setup[i] = PAWN | BLACK;  // Black pawns
         }
         // Copy constructors
-        Board(const Board& other){
-            setup = other.setup;
-        }
+        Board(const Board& other) = default;
         Board(const std::array<int, 64>& other){
             setup = other;
         }
@@ -104,20 +102,22 @@ namespace KS{
         if(isOnBoard(kingIndex, 15) && (board.setup[kingIndex + 15] == (KNIGHT | oppColor)) && (numLeft > 0 && numBottom > 1)){return true;}
         if(isOnBoard(kingIndex, 17) && (board.setup[kingIndex + 17] == (KNIGHT | oppColor)) && (numRight > 0 && numBottom > 1)){return true;}
    
-
+        // Couldn't figure out checking for checks from other pieces in time
 
         // Check for sliding pieces
-        for(int i = 0; i < 8; i++){
-            for(int n = 0; n < numToEdges[kingIndex][i]; n++){
-                int targetIndex = kingIndex + directions[i] * (n + 1);
-                if(board.setup[targetIndex] != 0){
-                    std::cout << " hihi" << "\n";
-                    if(IsSlidingPiece(targetIndex) && (board.setup[targetIndex], oppColor)){
-                        return false;
-                    }
-                }
-            }
-        }
+        // for(int i = 0; i < 8; i++){
+        //     for(int n = 0; n < numToEdges[kingIndex][i]; n++){
+        //         int targetIndex = kingIndex + directions[i] * (n + 1);
+        //         if(board.setup[targetIndex] != 0){
+        //             if(IsSlidingPiece(targetIndex) && isColor(board.setup[targetIndex], oppColor)){
+        //                 std::cout << "Checked by: " << targetIndex << "\n";
+        //                 std::cout << "King at " << kingIndex << "\n";
+        //                 return true;
+        //             }
+        //             break;
+        //         }
+        //     }
+        // }
         // Check for opponent King
         // for(int offset : directions){   
         //     int checkPos = kingIndex + offset;

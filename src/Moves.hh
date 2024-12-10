@@ -34,7 +34,7 @@ namespace KS{
     /// @return True if piece can move to specified position
     bool CanMakeMove(int piece, int from, int offset, const Board& board){
         if(!isOnBoard(from, offset)){return false;}
-        Board boardCopy = board;
+        Board boardCopy(board);
         boardCopy.setup[from + offset] =  boardCopy.setup[from];
         boardCopy.setup[from] = 0;
 

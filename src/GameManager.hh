@@ -4,6 +4,7 @@
 #include "Board.hh"
 #include "Moves.hh"
 #include "Point.hh"
+#include "MainMenu.hh"
 #include "BoardWindow.hh"
 #include "ManagerClass.hh"
 
@@ -20,14 +21,22 @@ namespace KS{
         public:
 
             GameManager():
+            menuWin({100,100}, {500, 600}, "Chess Menu", this),
             boardWin({100,100}, {1200, 850}, "Chess", this),
             currentBoard(Board()),
             aMoves(),
             capturedPieces(){
-                boardWin.show();
+                menuWin.show();
                 populateNumToEdges();
+                
+            }
+
+            void startGame(){
+                menuWin.hide();
+                boardWin.show();
                 UpdateWindow();
             }
+
             void UpdateWindow(){     
                 boardWin.UpdateBoard(currentBoard,aMoves, capturedPieces);
             }
@@ -37,15 +46,18 @@ namespace KS{
                     int index = screenPoint_toIndex(point);
                     if(aMoves.available[index]){
                         // Handle making a move
+                        if(currentBoard.setup[index] != 0){capturedPieces.push_back(currentBoard.setup[index]);}
                         currentBoard.setup[index] = currentBoard.setup[selectedIndex];
                         currentBoard.setup[selectedIndex] = 0;
                         aMoves.clear();
                         selectedIndex = -1;
                         whiteTurn = !whiteTurn;     
                     }else if(isColor(currentBoard.setup[index], (whiteTurn) ? WHITE : BLACK)){
+                        // Handle displaying available moves
                         aMoves.Update(currentBoard.setup[index], index, currentBoard);
                         selectedIndex = index;
                     }else{
+                        // Empty square clicked
                         aMoves.clear();
                     }
                     UpdateWindow();
@@ -54,6 +66,7 @@ namespace KS{
 
             }
         private:
+            MainMenu menuWin;
             BoardWindow boardWin;
             Board currentBoard;
             AvailableMoves aMoves;
