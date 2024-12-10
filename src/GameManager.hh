@@ -25,6 +25,7 @@ namespace KS{
             aMoves(),
             capturedPieces(){
                 boardWin.show();
+                populateNumToEdges();
                 UpdateWindow();
             }
             void UpdateWindow(){     
@@ -32,21 +33,36 @@ namespace KS{
             }
             void getInput(const AUGL::Point& point){
                 if(50 < point.x && point.x < 850 && 0 < point.y && point.y < 800){
+
                     int index = screenPoint_toIndex(point);
-                    if(currentBoard.setup[index] != 0){
-                        aMoves.Update(currentBoard.setup[index], index, currentBoard);     
+                    if(aMoves.available[index]){
+                        // Handle making a move
+                        currentBoard.setup[index] = currentBoard.setup[selectedIndex];
+                        currentBoard.setup[selectedIndex] = 0;
+                        aMoves.clear();
+                        selectedIndex = -1;
+                        whiteTurn = !whiteTurn;     
+                    }else if(isColor(currentBoard.setup[index], (whiteTurn) ? WHITE : BLACK)){
+                        aMoves.Update(currentBoard.setup[index], index, currentBoard);
+                        selectedIndex = index;
+                    }else{
+                        aMoves.clear();
                     }
                     UpdateWindow();
                     boardWin.redraw();
                 }
-                
+
             }
         private:
             BoardWindow boardWin;
             Board currentBoard;
             AvailableMoves aMoves;
             std::vector<int> capturedPieces;
-    }; 
+            bool whiteTurn = true;
+            
+            int selectedIndex = -1;
+    };
+
     
 
 

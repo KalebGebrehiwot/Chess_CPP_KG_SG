@@ -64,26 +64,10 @@ namespace KS{
     }
 
     bool isOnBoard(int index, int offset){
-        // Calculate the target index after applying the offset
         int targetIndex = index + offset;
-
-        // Check if the target index is out of bounds (0-63)
-        if (targetIndex < 0 || targetIndex >= 64) {
-            return false;
-        }
-        
-  
-        int currentRow = index / 8;
-        int currentCol = index % 8;
-
-    
-        int targetRow = targetIndex / 8;
-        int targetCol = targetIndex % 8;
-        // [Don't know how to approach this]
-        
-        // If we get here, the move is within bounds
-        return true;
+        return !(targetIndex < 0 || targetIndex >= 64);
     }
+
     /// @return True if the specified color king is checked
     bool isChecked(int color, const Board& board){
         int oppColor = (color == WHITE)? BLACK : WHITE;
@@ -104,39 +88,43 @@ namespace KS{
             return true;
         }
         // Check for knights
-        for(int offset : knightMoves){
-            int checkPos = kingIndex + offset;
-            if(isOnBoard(kingIndex, offset) && board.setup[checkPos] == (oppColor | KNIGHT)){
-                return true;
-            }
-        }
-        // Check for Bishops, or Queens
-        for(int dir : bishopDirections){
-            for(int i = 1; i < 8; i++){
-               int checkPos = kingIndex + dir * i;
-               if(!isOnBoard(kingIndex, dir * i) || !IsBishopOrQueen(board.setup[checkPos])) {break;} 
-               if(isColor(board.setup[checkPos], oppColor)){
-                    return false;
-               } 
-            }
-        }
-        // Check for Rooks, or Queens
-        for(int dir : rookDirections){
-            for(int i = 1; i < 8; i++){
-               int checkPos = kingIndex + dir * i;
-               if(!isOnBoard(kingIndex, dir * i) || !IsRookOrQueen(board.setup[checkPos])) {break;} 
-               if(isColor(board.setup[checkPos], oppColor)){
-                    return true;
-               } 
+        // Again Hard coding this part for now
+        // Hard coding this for now
+        int numLeft = numToEdges[kingIndex][2]; 
+        int numRight = numToEdges[kingIndex][3];
+        int numBottom = numToEdges[kingIndex][0];
+        int numTop = numToEdges[kingIndex][1];
+
+        if(isOnBoard(kingIndex, -17) && (board.setup[kingIndex - 17] == (KNIGHT | oppColor)) && (numLeft > 0 && numTop > 1)){return true;}
+        if(isOnBoard(kingIndex, -15) && (board.setup[kingIndex - 15] == (KNIGHT | oppColor)) && (numRight > 0 && numTop > 1)){return true;}
+        if(isOnBoard(kingIndex, -10) && (board.setup[kingIndex - 10] == (KNIGHT | oppColor)) && (numLeft > 1 && numTop > 0)){return true;}
+        if(isOnBoard(kingIndex, -6) && (board.setup[kingIndex - 6] == (KNIGHT | oppColor)) && (numRight > 1 && numTop > 0)){return true;}
+        if(isOnBoard(kingIndex, 6) && (board.setup[kingIndex + 6] == (KNIGHT | oppColor)) && (numLeft > 1 && numBottom > 0)){return true;}
+        if(isOnBoard(kingIndex, 10) && (board.setup[kingIndex + 10] == (KNIGHT | oppColor)) && (numRight > 1 && numBottom > 0)){return true;}
+        if(isOnBoard(kingIndex, 15) && (board.setup[kingIndex + 15] == (KNIGHT | oppColor)) && (numLeft > 0 && numBottom > 1)){return true;}
+        if(isOnBoard(kingIndex, 17) && (board.setup[kingIndex + 17] == (KNIGHT | oppColor)) && (numRight > 0 && numBottom > 1)){return true;}
+   
+
+
+        // Check for sliding pieces
+        for(int i = 0; i < 8; i++){
+            for(int n = 0; n < numToEdges[kingIndex][i]; n++){
+                int targetIndex = kingIndex + directions[i] * (n + 1);
+                if(board.setup[targetIndex] != 0){
+                    std::cout << " hihi" << "\n";
+                    if(IsSlidingPiece(targetIndex) && (board.setup[targetIndex], oppColor)){
+                        return false;
+                    }
+                }
             }
         }
         // Check for opponent King
-        for(int offset : kingMoves){   
-            int checkPos = kingIndex + offset;
-            if(isOnBoard(kingIndex, offset) && board.setup[checkPos] == (oppColor | KING)){
-                return true;
-            } 
-        }
+        // for(int offset : directions){   
+        //     int checkPos = kingIndex + offset;
+        //     if(isOnBoard(kingIndex, offset) && board.setup[checkPos] == (oppColor | KING)){
+        //         return true;
+        //     } 
+        // }
         // No Checks found
         return false;
     }

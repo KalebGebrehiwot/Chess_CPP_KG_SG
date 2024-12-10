@@ -5,6 +5,8 @@
  */
 #ifndef Piece_HH__
 #define Piece_HH__
+
+#include <cmath>
 #include <map>
 #include <climits>
 #include <array>
@@ -15,10 +17,10 @@ namespace KS{
     const int NONE = 0;
     const int KING = 1;
     const int PAWN = 2;
-    const int BISHOP = 3;
-    const int KNIGHT = 5;
-    const int ROOK = 6;
-    const int QUEEN = 7;
+    const int KNIGHT = 3;
+    const int BISHOP = 4;
+    const int ROOK = 5;
+    const int QUEEN = 6;
 
     const int WHITE = 8;
     const int BLACK = 16;
@@ -53,18 +55,34 @@ namespace KS{
     } 
     // ---------- Move Rules --------------
 
-    // Figured hard coding these values for pawns would result in less code
-    //const std::array<int, 4> whitePawnMoves = {-8,-16,-7,-9};
-    //const std::array<int, 4> blackPawnMoves = {8,16,7,9};
+    // Hard coding knight moves for now
+    //const std::array<int, 8> knightMoves = {-17, -15, -10, -6, 6, 10, 15, 17};
+    const std::array<int, 8> directions = { 8, -8, -1, 1, 7, -7, 9, -9};
+    std::array<std::array<int, 8>, 8> numToEdges;
 
-    const std::array<int, 8> knightMoves = {-17, -15, -10, -6, 6, 10, 15, 17};
-    const std::array<int, 8> kingMoves = {-9, -8, -7, -1, 1, 7, 8, 9};
-    
-    const std::array<int, 4> rookDirections = {-1, 1, -8, 8};
-    const std::array<int, 4> bishopDirections = {-9, 9, -7, 7};
-    const std::array<int, 8> queenDirections = {-1, 1, -8, 8, -9, 9, -7, 7};
-    
+    void populateNumToEdges(){
+        for(int i = 0; i < 8; i++){
+            for(int j = 0; j < 8; j++){
 
+                int numNorth = 7 - j;
+                int numSouth = j;
+                int numWest = i;
+                int numEast = 7 - i;
+
+                int squareIndex = j * 8 + i;
+                numToEdges[squareIndex] = {
+                    numNorth,
+                    numSouth,
+                    numWest,
+                    numEast,
+                    std::min(numNorth, numWest),
+                    std::min(numSouth, numEast),
+                    std::min(numNorth, numEast),
+                    std::min(numSouth, numWest)
+                };
+            }
+        }
+    }
 }
 
 #endif
